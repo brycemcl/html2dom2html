@@ -8,13 +8,15 @@ const args = process.argv.slice(2)
 
 const writeDom = async (filePath) => {
   console.log('Working on: ', filePath)
+  let rawDom
+  let dom
   const browser = await puppeteer.launch({ args: ['--no-sandbox'] })
   try {
     const page = await browser.newPage()
     await page.goto(`file:${filePath}`, {
       waitUntil: 'networkidle0',
     })
-    const rawDom = await page.evaluate(() => {
+    rawDom = await page.evaluate(() => {
       if (document.doctype) {
         return (
           new XMLSerializer().serializeToString(document.doctype) +
@@ -25,13 +27,14 @@ const writeDom = async (filePath) => {
         return document.querySelector('*').outerHTML
       }
     })
-    await fs.writeFile(filePath, rawDom, 'utf8')
-    const dom = prettier.format(rawDom, { parser: 'html' })
+    const rawDomPromise = fs.writeFile(filePath, rawDom, 'utf8')
+    browser.close()
+    dom = prettier.format(rawDom, { parser: 'html' })
+    await rawDomPromise
     await fs.writeFile(filePath, dom, 'utf8')
   } catch (err) {
     console.log(filePath)
     console.error(err)
-  } finally {
     await browser.close()
   }
 }
