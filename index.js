@@ -36,7 +36,9 @@ const writeDom = async (filePath) => {
 }
 
 const fileGlob = args[0] || '/**/*.html'
-glob(path.join(__dirname, fileGlob), {}, (err, files) => {
+const pathJoin = path.join(process.cwd(), fileGlob)
+console.log('Searching for: ', pathJoin)
+glob(pathJoin, {}, (err, files) => {
   if (err) {
     console.log(err)
   } else {
