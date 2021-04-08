@@ -25,6 +25,7 @@ const writeDom = async (filePath) => {
         return document.querySelector('*').outerHTML
       }
     })
+    await fs.writeFile(filePath, rawDom, 'utf8')
     const dom = prettier.format(rawDom, { parser: 'html' })
     await fs.writeFile(filePath, dom, 'utf8')
   } catch (err) {
