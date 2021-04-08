@@ -7,6 +7,7 @@ const prettier = require('prettier')
 const args = process.argv.slice(2)
 
 const writeDom = async (filePath) => {
+  console.log('Working on: ', filePath)
   const browser = await puppeteer.launch({ args: ['--no-sandbox'] })
   try {
     const page = await browser.newPage()
