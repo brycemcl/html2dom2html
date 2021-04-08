@@ -1,0 +1,21 @@
+{
+  "name": "html2dom2html",
+  "version": "0.2.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:brycemcl/html2dom2html.git"
+  },
+  "bin": "./index.js",
+  "author": "Bryce McLachlan",
+  "license": "ISC",
+  "dependencies": {
+    "glob": "^7.1.6",
+    "prettier": "^2.2.1",
+    "puppeteer": "^8.0.0"
+  }
+}
