@@ -14,7 +14,7 @@ const writeDom = async (filePath) => {
   try {
     const page = await browser.newPage()
     await page.setJavaScriptEnabled(false)
-    await page.goto(`file:${filePath}`, {
+    await page.goto(`file:/${filePath}`, {
       waitUntil: 'networkidle0',
     })
     rawDom = await page.evaluate(() => {
