@@ -5,31 +5,21 @@ const glob = require('glob')
 const puppeteer = require('puppeteer')
 const prettier = require('prettier')
 const args = process.argv.slice(2)
-
-const fileUrl = (str) => {
-  if (typeof str !== 'string') {
-    throw new Error('Expected a string')
-  }
-
-  var pathName = path.resolve(str).replace(/\\/g, '/')
-
-  // Windows drive letter must be prefixed with a slash
-  if (pathName[0] !== '/') {
-    pathName = '/' + pathName
-  }
-
-  return encodeURI('file:/' + pathName)
-}
-
+const express = require('express')
+const app = express()
+app.use(process.cwd(), express.static(process.cwd()))
+const server = app.listen(0, () => {})
+const port = server.address().port
 const writeDom = async (filePath) => {
   console.log('Working on: ', filePath)
+  console.log(`http://localhost:${port}${filePath}`)
   let rawDom
   let dom
   const browser = await puppeteer.launch({ args: ['--no-sandbox'] })
   try {
     const page = await browser.newPage()
     await page.setJavaScriptEnabled(false)
-    await page.goto(fileUrl(filePath), {
+    await page.goto(`http://localhost:${port}${filePath}`, {
       waitUntil: 'networkidle0',
     })
     rawDom = await page.evaluate(() => {
@@ -66,6 +56,7 @@ glob(pathJoin, {}, (err, files) => {
       for (const file of files) {
         await writeDom(file)
       }
+      server.close()
     })()
   }
 })
