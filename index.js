@@ -4,8 +4,22 @@ const fs = require('fs').promises
 const glob = require('glob')
 const puppeteer = require('puppeteer')
 const prettier = require('prettier')
-const fileUrl = require('file-url').default
 const args = process.argv.slice(2)
+
+const fileUrl = (str) => {
+  if (typeof str !== 'string') {
+    throw new Error('Expected a string')
+  }
+
+  var pathName = path.resolve(str).replace(/\\/g, '/')
+
+  // Windows drive letter must be prefixed with a slash
+  if (pathName[0] !== '/') {
+    pathName = '/' + pathName
+  }
+
+  return encodeURI('file:/' + pathName)
+}
 
 const writeDom = async (filePath) => {
   console.log('Working on: ', filePath)
