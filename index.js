@@ -19,7 +19,7 @@ const writeDom = async (filePath) => {
   try {
     const page = await browser.newPage()
     await page.setJavaScriptEnabled(false)
-    await page.goto(`http://localhost:${port}${filePath}`, {
+    await page.goto(`http://localhost:${port}${encodeURI(filePath)}`, {
       waitUntil: 'networkidle0',
     })
     rawDom = await page.evaluate(() => {
