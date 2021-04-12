@@ -12,13 +12,21 @@ const server = app.listen(0, () => {})
 const port = server.address().port
 const writeDom = async (filePath) => {
   console.log('Working on: ', filePath)
-  console.log(`http://localhost:${port}${filePath}`)
+  let noError = true
   let rawDom
   let dom
   const browser = await puppeteer.launch({ args: ['--no-sandbox'] })
   try {
     const page = await browser.newPage()
     await page.setJavaScriptEnabled(false)
+    page.on('response', async (response) => {
+      if (
+        Number(response.status().toString()[0]) !== 3 &&
+        Number(response.status().toString()[0]) !== 4
+      ) {
+        noError = false
+      }
+    })
     await page.goto(`http://localhost:${port}${encodeURI(filePath)}`, {
       waitUntil: 'networkidle0',
     })
@@ -33,11 +41,13 @@ const writeDom = async (filePath) => {
         return document.querySelector('*').outerHTML
       }
     })
-    const rawDomPromise = fs.writeFile(filePath, rawDom, 'utf8')
     browser.close()
-    dom = prettier.format(rawDom, { parser: 'html' })
-    await rawDomPromise
-    await fs.writeFile(filePath, dom, 'utf8')
+    if (noError) {
+      const rawDomPromise = fs.writeFile(filePath, rawDom, 'utf8')
+      dom = prettier.format(rawDom, { parser: 'html' })
+      await rawDomPromise
+      await fs.writeFile(filePath, dom, 'utf8')
+    }
   } catch (err) {
     console.log(filePath)
     console.error(err)
