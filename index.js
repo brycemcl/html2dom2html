@@ -13,6 +13,7 @@ const writeDom = async (filePath) => {
   const browser = await puppeteer.launch({ args: ['--no-sandbox'] })
   try {
     const page = await browser.newPage()
+    await page.setJavaScriptEnabled(false)
     await page.goto(`file:${filePath}`, {
       waitUntil: 'networkidle0',
     })
