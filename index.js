@@ -4,6 +4,7 @@ const fs = require('fs').promises
 const glob = require('glob')
 const puppeteer = require('puppeteer')
 const prettier = require('prettier')
+const fileUrl = require('file-url').default
 const args = process.argv.slice(2)
 
 const writeDom = async (filePath) => {
@@ -14,7 +15,7 @@ const writeDom = async (filePath) => {
   try {
     const page = await browser.newPage()
     await page.setJavaScriptEnabled(false)
-    await page.goto(`file:/${filePath}`, {
+    await page.goto(fileUrl(filePath), {
       waitUntil: 'networkidle0',
     })
     rawDom = await page.evaluate(() => {
