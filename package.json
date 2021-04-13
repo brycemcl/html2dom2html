@@ -1,7 +1,7 @@
 {
   "name": "html2dom2html",
-  "version": "0.3.3",
-  "description": "",
+  "version": "0.4.1",
+  "description": "Take html that displays correctly in the browser but isn't valid html and replace it with valid html",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
@@ -16,6 +16,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "glob": "^7.1.6",
+    "posthtml": "^0.15.2",
     "prettier": "^2.2.1",
     "puppeteer": "^8.0.0"
   }
